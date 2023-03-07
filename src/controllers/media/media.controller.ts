@@ -46,10 +46,10 @@ export class mediaController {
   @Patch('media/:id')
   async updateMedia(@Param() params: UpdateMediaById, @Body() body: UpdateMedia) {
     try {
-      await this.mediaService.updateMedia(params, body);
+      const res = await this.mediaService.updateMedia(params, body);
       return {
         status: 'success',
-        message: 'media updated successfully',
+        message: res.message,
         data: [],
       };
     } catch (error) {
@@ -64,11 +64,11 @@ export class mediaController {
   @Delete('media/:id')
   async deleteMedia(@Param() params: DeleteMediaById) {
     try {
-      const media = await this.mediaService.deleteMedia(params);
+      const res = await this.mediaService.deleteMedia(params);
       return {
         status: 'success',
-        message: 'media deleted successfully',
-        data: [media],
+        message: res.message,
+        data: [res.data],
       };
     } catch (error) {
       return {

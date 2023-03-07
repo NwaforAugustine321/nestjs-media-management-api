@@ -17,12 +17,23 @@ export class mediaService {
 
   async updateMedia(params: UpdateMediaById, body: UpdateMedia) {
     try {
-      await this.database.media.update({
-        data: body,
+      const data = await this.database.media.findUnique({
         where: {
           id: params.id,
         },
       });
+
+      if (data !== null) {
+        await this.database.media.update({
+          data: body,
+          where: {
+            id: params.id,
+          },
+        });
+        return { message: 'media updated successfully' };
+      }
+
+      return { message: 'media not found' };
     } catch (error) {
       throw error;
     }
@@ -30,13 +41,22 @@ export class mediaService {
 
   async deleteMedia(params: DeleteMediaById) {
     try {
-      const media = await this.database.media.delete({
+      const data = await this.database.media.findUnique({
         where: {
           id: params.id,
         },
       });
 
-      return media;
+      if (data !== null) {
+        const media = await this.database.media.delete({
+          where: {
+            id: params.id,
+          },
+        });
+        return { message: 'media deleted successfully', data: media };
+      }
+
+      return { message: 'media not found', data: [] };
     } catch (error) {
       throw error;
     }
